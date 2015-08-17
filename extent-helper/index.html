@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<!-- This sample builds upon the following two tools:
+    http://help.arcgis.com/en/webapps/flexviewer/extenthelper/flexviewer_extenthelper.html
+    http://noashx.github.io/ -->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
+  <title>map helper</title>
+  <link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+  <style>
+    p {
+      text-indent: 5px;
+    }
+
+    li {
+      text-indent: -25px;
+      padding-left: 25px;
+    }
+
+    #t1 {
+      -moz-tab-size: 4;
+      /* Code for Firefox */
+      -o-tab-size: 4;
+      /* Code for Opera 10.6-12.1 */
+      tab-size: 4;
+    }
+
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    #leftPane {}
+
+    #map {
+      padding: 0;
+      margin-top: 80px;
+      margin-bottom: 10px;
+      margin-right: 10px;
+      margin-left: 5px;
+      border-style: solid;
+      border-width: 5px;
+      border-color: rgb(180, 182, 200);
+      background-color: rgb(180, 182, 200);
+    }
+
+    #extent {
+      display: block;
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 200px;
+    }
+    .button {
+       border: 1px solid #0a3c59;
+       background: #3e779d;
+       background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
+       background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+       background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+       background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+       background: -o-linear-gradient(top, #65a9d7, #3e779d);
+       background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+       padding: 6px 6px;
+       -webkit-border-radius: 6px;
+       -moz-border-radius: 6px;
+       border-radius: 6px;
+       -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+       -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+       box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
+       text-shadow: #7ea4bd 0 1px 0;
+       color: #000000;
+       font-size: 14px;
+       font-family: helvetica, serif;
+       text-decoration: none;
+       vertical-align: middle;
+       }
+    .button:hover {
+       border: 1px solid #0a3c59;
+       text-shadow: #1e4158 0 1px 0;
+       background: #3e779d;
+       background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
+       background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
+       background: -moz-linear-gradient(top, #65a9d7, #3e779d);
+       background: -ms-linear-gradient(top, #65a9d7, #3e779d);
+       background: -o-linear-gradient(top, #65a9d7, #3e779d);
+       background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
+       color: #fff;
+       }
+    .button:active {
+       text-shadow: #1e4158 0 1px 0;
+       border: 1px solid #0a3c59;
+       background: #65a9d7;
+       background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
+       background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
+       background: -moz-linear-gradient(top, #3e779d, #65a9d7);
+       background: -ms-linear-gradient(top, #3e779d, #65a9d7);
+       background: -o-linear-gradient(top, #3e779d, #65a9d7);
+       background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
+       color: #fff;
+       }
+    #serviceInput {
+      background-color: rgb(180, 182, 200);
+      display: block;
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 400px;
+      padding: 5px;
+    }
+
+    #search {
+      display: block;
+      position: absolute;
+      z-index: 2;
+      top: 10px;
+      left: 355px;
+    }
+
+    #leftPane {
+      font-family: "Lucida Console";
+      margin: 10px;
+      background-color: rgb(180, 182, 200);
+      width: 340px;
+      font-size: 12px;
+    }
+
+    table {
+      border-collapse: collapse;
+      margin: 3px;
+    }
+
+    td,
+    th {
+      padding: 0.5rem;
+      text-align: left;
+    }
+
+    .box {
+      background-color: rgb(256, 256, 256);
+      border-width: 1px;
+      border-color: rgb(50, 50, 50);
+      margin: 3px;
+      border-style: solid;
+    }
+  </style>
+  <script src="http://js.arcgis.com/3.13/"></script>
+  <script>
+    var map, layerExtent;
+    var mouseCoords = "(X,Y)";
+    var mouseCoordsMerc = "(X,Y)";
+    var json;
+
+    require([
+      "esri/map", "esri/dijit/BasemapGallery", "esri/arcgis/utils", "dojo/parser",
+      "esri/graphic", "esri/geometry/webMercatorUtils", "esri/symbols/SimpleMarkerSymbol",
+      "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/geometry/Point",
+      "esri/dijit/Search", "dojo/_base/Color", "dojo/_base/json",
+      "dojo/dom", "dojo/on", "dojo/number", "esri/layers/ArcGISDynamicMapServiceLayer",
+      "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/toolbars/draw",
+      "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
+      "dojo/domReady!"
+    ], function(
+      Map, BasemapGallery, arcgisUtils, parser,
+      Graphic, webMercatorUtils, SimpleMarkerSymbol,
+      SimpleLineSymbol, SimpleFillSymbol, Point,
+      Search, Color, Json,
+      dom, on, number, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, DrawToolbar
+    ) {
+
+      parser.parse();
+
+
+
+
+
+
+      map = new Map("map", {
+        basemap: "gray",
+        center: [-71.6072, 43.8185],
+        zoom: 6
+      });
+
+      // add the basemap gallery, in this case we'll display maps from ArcGIS.com
+      var basemapGallery = new BasemapGallery({
+        showArcGISBasemaps: true,
+        map: map
+      }, "basemapGallery");
+      basemapGallery.startup();
+
+      // add an example map service to automatically zoom to
+      var layer = new ArcGISDynamicMapServiceLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/WindTurbines/MapServer");
+      map.addLayer(layer);
+      layer.on("load", function() {
+        map.setExtent(layer.fullExtent);
+      });
+
+      // other sample services:
+      // http://sampleserver6.arcgisonline.com/arcgis/rest/services/WindTurbines/MapServer
+      // http://sampleserver6.arcgisonline.com/arcgis/rest/services/ServiceRequest/MapServer
+      // http://sampleserver6.arcgisonline.com/arcgis/rest/services/NapervilleShelters/MapServer
+
+      // add an input box to change the map service
+      var newLayerButton = dom.byId("execute");
+      on(newLayerButton, "click", function(evt) {
+        map.removeLayer(layer);
+        var newLayerUrl = dom.byId("layerName").value;
+        //newLayerButton.on("click", function() {
+        layer = new ArcGISDynamicMapServiceLayer(newLayerUrl);
+        map.addLayer(layer);
+        layer.on("load", function() {
+          layerExtent = layer.fullExtent;
+          map.setExtent(layer.initialExtent);
+        });
+      });
+
+      // event handlers
+      map.on("mouse-move", showMouseCoords);
+      map.on("click", drawCenter);
+      map.on("extent-change", showAttributes);
+      map.on("load", showAttributes)
+      basemapGallery.on("selection-change", showAttributes);
+      map.on("load", initDrawToolbar);
+
+      function showMouseCoords(evt) {
+        //the map is in web mercator but display coordinates in geographic (lat, long)
+        var mp = webMercatorUtils.webMercatorToGeographic(evt.mapPoint);
+        //display mouse coordinates
+        mouseCoords = "(" + mp.x.toFixed(3) + ", " + mp.y.toFixed(3) + ")";
+        mouseCoordsMerc = "(" + evt.mapPoint.x.toFixed(3) + ", " + evt.mapPoint.y.toFixed(3) + ")";
+        showAttributes();
+      }
+
+      // fill symbol used for extent
+      var fillSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
+        new SimpleLineSymbol(
+          SimpleLineSymbol.STYLE_SOLID,
+          new Color('#000'),
+          1
+        ), new Color([111, 0, 255, 0.15])
+      );
+
+      // add the nice looking custom location point symbol
+      symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 20,
+        new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+          new Color([255, 0, 0]), 1.5),
+        new Color([0, 255, 0, 0.25]));
+
+      // add and start the geocoding widget
+      var s = new Search({
+         enableButtonMode: true, //this enables the search widget to display as a single button
+         enableLabel: false,
+         enableInfoWindow: true,
+         showInfoWindowOnSelect: false,
+         map: map
+      }, "search");
+      s.startup();
+
+      // when user clicks, this function adds a customized symbol, then pans to, the point of clicking
+      function drawCenter(evt) {
+        map.graphics.clear();
+        map.graphics.add(new Graphic(evt.mapPoint, symbol));
+        map.centerAt(evt.mapPoint);
+      }
+
+      function initDrawToolbar() {
+        map.infoWindow.resize(500, 600);
+        tb = new DrawToolbar(map);
+        tb.on("draw-end", addGraphic);
+        var extentButton = document.getElementById("extent");
+        extentButton.onclick = function() {
+          tb.activate("extent");
+        };
+      }
+
+      // add the graphic, determine its extent and display the popup
+      function addGraphic(evt) {
+        //deactivate the toolbar and clear existing graphics
+        tb.deactivate();
+        map.enableMapNavigation();
+
+        var GLayer = new GraphicsLayer();
+        map.addLayer(GLayer);
+        GLayer.add(new Graphic(evt.geometry, fillSymbol));
+
+        var extentWebMerc = evt.geometry;
+        var JSONWebMerc = JSON.stringify(extentWebMerc, null, 4);
+
+        var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
+        var JSONGeog = JSON.stringify(extentGeog, null, 4);
+
+        var infoWinTable = "<table><thead>"
+        + "<tr><th>Geographic Coordinates:</th>"
+        + "<th>Web Mercator:</th></tr></thead>"
+        + "<tbody><tr>"
+        + "<td class=\"box\"><pre>" + JSONGeog + "</pre></td>"
+        + "<td class=\"box\"><pre>" + JSONGeog + "</pre></td></tr>"
+        + "</tbody></table>";
+
+        map.infoWindow.setTitle("JSON Extent: ");
+        map.infoWindow.setContent(infoWinTable);
+        var point = new Point();
+        var xMid = (evt.geometry.xmin + (evt.geometry.xmax*4)) / 5;
+        var yMid = (evt.geometry.ymin + (evt.geometry.ymax*3)) / 4;
+        point.spatialReference.wkid = 3857;
+        point.x = xMid;
+        point.y = yMid;
+
+        map.infoWindow.show(point);
+        map.infoWindow.on("hide", function() {
+          GLayer.clear();
+        });
+      }
+      // when the extent changes, including on start-up, this function gets and shows all attribute information
+      //sample magic sauce
+      function showAttributes() {
+        map.graphics.clear();
+
+
+        var centerMercator = map.extent.getCenter();
+        var centerMercatorX = dojo.number.parse((dojo.number.format(centerMercator.x, {
+          places: 3
+        })));
+        var centerMercatorY = dojo.number.parse((dojo.number.format(centerMercator.y, {
+          places: 3
+        })));
+
+        var extentWebMerc;
+        if (typeof map.extent.cache != "undefined") {
+          extentWebMerc = map.extent.cache._parts[0].extent;
+        }
+        else if (typeof map.extent._parts != "undefined") {
+          extentWebMerc = map.extent._parts[0].extent;
+        }
+        else {
+          extentWebMerc = map.extent //._parts[0].extent;
+        }
+        var JSONWebMerc = JSON.stringify(extentWebMerc, null, 4);
+
+        var centerGeographic = webMercatorUtils.webMercatorToGeographic(centerMercator);
+        var centerGeographicX = dojo.number.parse((dojo.number.format(centerGeographic.x, {
+          places: 3
+        })));
+        var centerGeographicY = dojo.number.parse((dojo.number.format(centerGeographic.y, {
+          places: 3
+        })));
+
+        var extentGeog = webMercatorUtils.webMercatorToGeographic(map.extent);
+        var JSONGeog = JSON.stringify(extentGeog, null, 4);
+
+        var graphic = new Graphic(centerMercator, symbol);
+        map.graphics.add(graphic);
+
+        var basemapString;
+
+        if (basemapGallery.getSelected()) {
+          var basemapTitle = basemapGallery.getSelected().title
+          switch (basemapTitle) {
+            case "Streets":
+              basemapString = "streets";
+              break;
+            case "Imagery":
+              basemapString = "satellite";
+              break;
+            case "Imagery with Labels":
+              basemapString = "hybrid";
+              break;
+            case "Topographic":
+              basemapString = "topo";
+              break;
+            case "Light Gray Canvas":
+              basemapString = "gray";
+              break;
+            case "Oceans":
+              basemapString = "oceans";
+              break;
+            case "National Geographic":
+              basemapString = "national-geographic";
+              break;
+            case "OpenStreetMap":
+              basemapString = "osm";
+              break;
+            case "Dark Gray Canvas":
+              basemapString = "dark-gray";
+              break;
+            default:
+              basemapString = "unlisted";
+          }
+        } else
+          basemapString = 'gray';
+
+        var mapParams = "<hr><h3>Map parameters:</h3>"
+        + "map = new Map(" + "'map'" + ", {" + "<br>" + "&nbsp;&nbsp;&nbsp;basemap: " + '"' + basemapString + '"' + "," + "<br>"
+          //+ "basemap: " + '"' + basemapString + '"' + "," + "<br>"
+          + "&nbsp;&nbsp;&nbsp;center:  " + "[" + centerGeographicX + ", " + centerGeographicY + "]," + "<br>" + "&nbsp;&nbsp;&nbsp;zoom: " + map.getZoom() + "<br>" + "});";
+
+
+        var tableMerc = "<h3>Geographic Coordinates: </h3>" + "<table><tbody>" + "<tr><td>JSON: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONWebMerc + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
+          "<tr><td>Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\">(" + centerMercatorX + ", " + centerMercatorY + ")</td></tr>" + "</tbody></table>" + "<table><tbody>" + "<tr><td>Mouse<br>coordinates:</td><td class=\"box\">" +
+          mouseCoordsMerc + "</td></tr>" + "</tbody></table>";
+
+        var tableGeog = "<h3>Web Mercator: </h3>" + "<table><tbody>" + "<tr><td>JSON: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONGeog + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
+          "<tr><td>Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\">(" + centerGeographicX + ", " + centerGeographicY + ")</td></tr>" + "</tbody></table>" + "<table><tbody>" + "<tr><td>Mouse<br>coordinates:</td><td class=\"box\">" +
+          mouseCoords + "</td></tr>" + "</tbody></table>";
+
+        dojo.byId("center").innerHTML = mapParams + tableMerc + tableGeog;
+      }
+
+      //basemap gallery widget error handling
+      basemapGallery.on("error", function(msg) {
+        console.log("lame basemap gallery error:  ", msg);
+      });
+
+      // //basemap gallery widget error handling
+      // geocoder.on("error", function(msg) {
+      //   console.log("lame geocoder error:  ", msg);
+      // });
+
+    });
+  </script>
+</head>
+
+<body class="claro">
+  <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:false" style="width:100%;height:100%;margin:0; background-color:rgb(50, 48, 70);">
+    <div id="serviceInput">
+      <input id="execute" type="button" class="button" value="Display another map service*">
+      <input type="text" id="layerName" size="120" style="margin-left:5px" value="http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer">
+      <br/>*Service must be in Web Mercator projection (3857) or Geographic coordinate system (4326)
+    </div>
+    <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
+      <button id="extent" class="button" >Draw an Extent</button>
+      <div id="search"></div>
+      <div style="position:absolute; right:20px; top:10px; z-Index:999;">
+        <div data-dojo-type="dijit/TitlePane" data-dojo-props="title:'Switch Basemap', closable:false,  open:false">
+          <div data-dojo-type="dijit/layout/ContentPane" style="width:380px; height:280px; overflow:auto;">
+            <div id="basemapGallery"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="leftPane" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'left'">
+      <h2>Extent Helper</h2>
+      <div>
+        <p>
+          This tool is designed to help determine Web Mercator and Geographic extents for constructing new maps.</br>
+        </p>
+        <span id="center">
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -11,145 +11,7 @@
   <title>map helper</title>
   <link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
   <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
-  <style>
-    p {
-      text-indent: 5px;
-    }
-
-    li {
-      text-indent: -25px;
-      padding-left: 25px;
-    }
-
-    #t1 {
-      -moz-tab-size: 4;
-      /* Code for Firefox */
-      -o-tab-size: 4;
-      /* Code for Opera 10.6-12.1 */
-      tab-size: 4;
-    }
-
-    html,
-    body {
-      height: 100%;
-      width: 100%;
-      margin: 0;
-      padding: 0;
-    }
-
-    #leftPane {}
-
-    #map {
-      padding: 0;
-      margin-top: 80px;
-      margin-bottom: 10px;
-      margin-right: 10px;
-      margin-left: 5px;
-      border-style: solid;
-      border-width: 5px;
-      border-color: rgb(180, 182, 200);
-      background-color: rgb(180, 182, 200);
-    }
-
-    #extent {
-      display: block;
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 200px;
-    }
-    .button {
-       border: 1px solid #0a3c59;
-       background: #3e779d;
-       background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-       background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-       background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-       background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-       background: -o-linear-gradient(top, #65a9d7, #3e779d);
-       background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-       padding: 6px 6px;
-       -webkit-border-radius: 6px;
-       -moz-border-radius: 6px;
-       border-radius: 6px;
-       -webkit-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-       -moz-box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-       box-shadow: rgba(255,255,255,0.4) 0 1px 0, inset rgba(255,255,255,0.4) 0 1px 0;
-       text-shadow: #7ea4bd 0 1px 0;
-       color: #000000;
-       font-size: 14px;
-       font-family: helvetica, serif;
-       text-decoration: none;
-       vertical-align: middle;
-       }
-    .button:hover {
-       border: 1px solid #0a3c59;
-       text-shadow: #1e4158 0 1px 0;
-       background: #3e779d;
-       background: -webkit-gradient(linear, left top, left bottom, from(#65a9d7), to(#3e779d));
-       background: -webkit-linear-gradient(top, #65a9d7, #3e779d);
-       background: -moz-linear-gradient(top, #65a9d7, #3e779d);
-       background: -ms-linear-gradient(top, #65a9d7, #3e779d);
-       background: -o-linear-gradient(top, #65a9d7, #3e779d);
-       background-image: -ms-linear-gradient(top, #65a9d7 0%, #3e779d 100%);
-       color: #fff;
-       }
-    .button:active {
-       text-shadow: #1e4158 0 1px 0;
-       border: 1px solid #0a3c59;
-       background: #65a9d7;
-       background: -webkit-gradient(linear, left top, left bottom, from(#3e779d), to(#3e779d));
-       background: -webkit-linear-gradient(top, #3e779d, #65a9d7);
-       background: -moz-linear-gradient(top, #3e779d, #65a9d7);
-       background: -ms-linear-gradient(top, #3e779d, #65a9d7);
-       background: -o-linear-gradient(top, #3e779d, #65a9d7);
-       background-image: -ms-linear-gradient(top, #3e779d 0%, #65a9d7 100%);
-       color: #fff;
-       }
-    #serviceInput {
-      background-color: rgb(180, 182, 200);
-      display: block;
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 400px;
-      padding: 5px;
-    }
-
-    #search {
-      display: block;
-      position: absolute;
-      z-index: 2;
-      top: 10px;
-      left: 355px;
-    }
-
-    #leftPane {
-      font-family: "Lucida Console";
-      margin: 10px;
-      background-color: rgb(180, 182, 200);
-      width: 340px;
-      font-size: 12px;
-    }
-
-    table {
-      border-collapse: collapse;
-      margin: 3px;
-    }
-
-    td,
-    th {
-      padding: 0.5rem;
-      text-align: left;
-    }
-
-    .box {
-      background-color: rgb(256, 256, 256);
-      border-width: 1px;
-      border-color: rgb(50, 50, 50);
-      margin: 3px;
-      border-style: solid;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
   <script src="http://js.arcgis.com/3.13/"></script>
   <script>
     var map, layerExtent;
@@ -175,10 +37,6 @@
     ) {
 
       parser.parse();
-
-
-
-
 
 
       map = new Map("map", {
@@ -254,11 +112,11 @@
 
       // add and start the geocoding widget
       var s = new Search({
-         enableButtonMode: true, //this enables the search widget to display as a single button
-         enableLabel: false,
-         enableInfoWindow: true,
-         showInfoWindowOnSelect: false,
-         map: map
+        enableButtonMode: true, //this enables the search widget to display as a single button
+        enableLabel: false,
+        enableInfoWindow: true,
+        showInfoWindowOnSelect: false,
+        map: map
       }, "search");
       s.startup();
 
@@ -295,19 +153,14 @@
         var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
         var JSONGeog = JSON.stringify(extentGeog, null, 4);
 
-        var infoWinTable = "<table><thead>"
-        + "<tr><th>Geographic Coordinates:</th>"
-        + "<th>Web Mercator:</th></tr></thead>"
-        + "<tbody><tr>"
-        + "<td class=\"box\"><pre>" + JSONGeog + "</pre></td>"
-        + "<td class=\"box\"><pre>" + JSONGeog + "</pre></td></tr>"
-        + "</tbody></table>";
+        var infoWinTable = "<table><thead>" + "<tr><th>Geographic Coordinates:</th>" + "<th>Web Mercator:</th></tr></thead>" + "<tbody><tr>" + "<td class=\"box\"><pre>" + JSONGeog + "</pre></td>" + "<td class=\"box\"><pre>" + JSONGeog +
+          "</pre></td></tr>" + "</tbody></table>";
 
         map.infoWindow.setTitle("JSON Extent: ");
         map.infoWindow.setContent(infoWinTable);
         var point = new Point();
-        var xMid = (evt.geometry.xmin + (evt.geometry.xmax*4)) / 5;
-        var yMid = (evt.geometry.ymin + (evt.geometry.ymax*3)) / 4;
+        var xMid = (evt.geometry.xmin + (evt.geometry.xmax * 4)) / 5;
+        var yMid = (evt.geometry.ymin + (evt.geometry.ymax * 3)) / 4;
         point.spatialReference.wkid = 3857;
         point.x = xMid;
         point.y = yMid;
@@ -334,11 +187,9 @@
         var extentWebMerc;
         if (typeof map.extent.cache != "undefined") {
           extentWebMerc = map.extent.cache._parts[0].extent;
-        }
-        else if (typeof map.extent._parts != "undefined") {
+        } else if (typeof map.extent._parts != "undefined") {
           extentWebMerc = map.extent._parts[0].extent;
-        }
-        else {
+        } else {
           extentWebMerc = map.extent //._parts[0].extent;
         }
         var JSONWebMerc = JSON.stringify(extentWebMerc, null, 4);
@@ -395,8 +246,7 @@
         } else
           basemapString = 'gray';
 
-        var mapParams = "<hr><h3>Map parameters:</h3>"
-        + "map = new Map(" + "'map'" + ", {" + "<br>" + "&nbsp;&nbsp;&nbsp;basemap: " + '"' + basemapString + '"' + "," + "<br>"
+        var mapParams = "<hr><h3>Map parameters:</h3>" + "map = new Map(" + "'map'" + ", {" + "<br>" + "&nbsp;&nbsp;&nbsp;basemap: " + '"' + basemapString + '"' + "," + "<br>"
           //+ "basemap: " + '"' + basemapString + '"' + "," + "<br>"
           + "&nbsp;&nbsp;&nbsp;center:  " + "[" + centerGeographicX + ", " + centerGeographicY + "]," + "<br>" + "&nbsp;&nbsp;&nbsp;zoom: " + map.getZoom() + "<br>" + "});";
 
@@ -434,7 +284,7 @@
       <br/>*Service must be in Web Mercator projection (3857) or Geographic coordinate system (4326)
     </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
-      <button id="extent" class="button" >Draw an Extent</button>
+      <button id="extent" class="button">Draw an Extent</button>
       <div id="search"></div>
       <div style="position:absolute; right:20px; top:10px; z-Index:999;">
         <div data-dojo-type="dijit/TitlePane" data-dojo-props="title:'Switch Basemap', closable:false,  open:false">

@@ -9,10 +9,10 @@
 
   <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no" />
   <title>map helper</title>
-  <link rel="stylesheet" href="http://js.arcgis.com/3.13/dijit/themes/claro/claro.css">
-  <link rel="stylesheet" href="http://js.arcgis.com/3.13/esri/css/esri.css">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.14/dijit/themes/claro/claro.css">
+  <link rel="stylesheet" href="http://js.arcgis.com/3.14/esri/css/esri.css">
   <link rel="stylesheet" type="text/css" href="style.css">
-  <script src="http://js.arcgis.com/3.13/"></script>
+  <script src="http://js.arcgis.com/3.14/"></script>
   <script>
     var map, layerExtent;
     var mouseCoords = "(X,Y)";
@@ -40,7 +40,7 @@
 
 
       map = new Map("map", {
-        basemap: "gray",
+        basemap: "dark-gray",
         center: [-71.6072, 43.8185],
         zoom: 6
       });
@@ -80,7 +80,7 @@
       });
 
       var newJSONButton = dom.byId("JSONexecute");
-      on(newJSONButton, "click", function(){
+      on(newJSONButton, "click", function() {
         var newJSON = dom.byId("inputJSON")
         var extent = new Extent(JSON.parse(newJSON.value));
 
@@ -255,18 +255,18 @@
               basemapString = "unlisted";
           }
         } else
-          basemapString = 'gray';
+          basemapString = 'dark-gray';
 
-        var mapParams = "<hr><h3>Map parameters:</h3>" + "map = new Map(" + "'map'" + ", {" + "<br>" + "&nbsp;&nbsp;&nbsp;basemap: " + '"' + basemapString + '"' + "," + "<br>"
+        var mapParams = "<h3>Map parameters:</h3>" + "map = new Map(" + "'map'" + ", {" + "<br>" + "&nbsp;&nbsp;&nbsp;basemap: " + '"' + basemapString + '"' + "," + "<br>"
           //+ "basemap: " + '"' + basemapString + '"' + "," + "<br>"
           + "&nbsp;&nbsp;&nbsp;center:  " + "[" + centerGeographicX + ", " + centerGeographicY + "]," + "<br>" + "&nbsp;&nbsp;&nbsp;zoom: " + map.getZoom() + "<br>" + "});";
 
 
-        var tableMerc = "<h3>Geographic Coordinates: </h3>" + "<table><tbody>" + "<tr><td>JSON: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONWebMerc + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
+        var tableMerc = "<h3>Web Mercator coordinates: </h3>" + "<table><tbody>" + "<tr><td>JSON extent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONWebMerc + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
           "<tr><td>Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\">(" + centerMercatorX + ", " + centerMercatorY + ")</td></tr>" + "</tbody></table>" + "<table><tbody>" + "<tr><td>Mouse<br>coordinates:</td><td class=\"box\">" +
           mouseCoordsMerc + "</td></tr>" + "</tbody></table>";
 
-        var tableGeog = "<h3>Web Mercator: </h3>" + "<table><tbody>" + "<tr><td>JSON: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONGeog + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
+        var tableGeog = "<h3>Geographic coordinates: </h3>" + "<table><tbody>" + "<tr><td>JSON extent: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\"><pre>" + JSONGeog + "</pre></td></tr>" + "</tbody></table>" + "<table><tbody>" +
           "<tr><td>Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\">(" + centerGeographicX + ", " + centerGeographicY + ")</td></tr>" + "</tbody></table>" + "<table><tbody>" + "<tr><td>Mouse<br>coordinates:</td><td class=\"box\">" +
           mouseCoords + "</td></tr>" + "</tbody></table>";
 
@@ -290,9 +290,20 @@
 <body class="claro">
   <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:false" style="width:100%;height:100%;margin:0; background-color:rgb(50, 48, 70);">
     <div id="serviceInput">
-      <input id="execute" type="button" class="button" value="Display another map service*"></input>
-      <input type="url" id="layerName" size="120" style="margin-left:5px" value="http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer"></input>
-      <br/>*Service must be in Web Mercator projection (3857) or Geographic coordinate system (4326)
+      <table>
+        <tbody>
+          <tr>
+            <td style="padding-right:15px">
+              <h2 id="title">Extent Helper</h2>
+            </td>
+            <td>This tool is designed to help determine Web Mercator and Geographic extents and coordinates for constructing new maps.</td>
+            <td>
+              <input id="execute" type="button" class="button" value="Display another map service*"></input> *Service must be in Web Mercator projection (3857) or Geographic coordinate system (4326)
+              <input type="url" id="layerName" size="100" value="http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer"></input>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
       <button id="extent" class="button">Draw an Extent</button>
@@ -306,11 +317,9 @@
       </div>
     </div>
     <div id="leftPane" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'left'">
-      <h2>Extent Helper</h2>
+      <!-- <h2>Extent Helper</h2> -->
       <div>
-        <p>
-          This tool is designed to help determine Web Mercator and Geographic extents for constructing new maps.</br>
-        </p>
+
         <span id="outputCoords">
         </span>
         <hr>

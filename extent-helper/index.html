@@ -25,7 +25,7 @@
       "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/geometry/Point",
       "esri/dijit/Search", "dojo/_base/Color", "dojo/_base/json",
       "dojo/dom", "dojo/on", "dojo/number", "esri/layers/ArcGISDynamicMapServiceLayer",
-      "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/toolbars/draw",
+      "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/toolbars/draw", "esri/geometry/Extent",
       "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
       "dojo/domReady!"
     ], function(
@@ -33,7 +33,7 @@
       Graphic, webMercatorUtils, SimpleMarkerSymbol,
       SimpleLineSymbol, SimpleFillSymbol, Point,
       Search, Color, Json,
-      dom, on, number, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, DrawToolbar
+      dom, on, number, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, DrawToolbar, Extent
     ) {
 
       parser.parse();
@@ -74,8 +74,19 @@
         map.addLayer(layer);
         layer.on("load", function() {
           layerExtent = layer.fullExtent;
+          console.log(newLayerUrl);
           map.setExtent(layer.initialExtent);
         });
+      });
+
+      var newJSONButton = dom.byId("JSONexecute");
+      on(newJSONButton, "click", function(){
+        var newJSON = dom.byId("inputJSON")
+        var extent = new Extent(JSON.parse(newJSON.value));
+
+        console.log(newJSON.value);
+        console.log(map.extent);
+        map.setExtent(extent);
       });
 
       // event handlers
@@ -259,7 +270,7 @@
           "<tr><td>Center:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class=\"box\">(" + centerGeographicX + ", " + centerGeographicY + ")</td></tr>" + "</tbody></table>" + "<table><tbody>" + "<tr><td>Mouse<br>coordinates:</td><td class=\"box\">" +
           mouseCoords + "</td></tr>" + "</tbody></table>";
 
-        dojo.byId("center").innerHTML = mapParams + tableMerc + tableGeog;
+        dojo.byId("outputCoords").innerHTML = mapParams + tableMerc + tableGeog;
       }
 
       //basemap gallery widget error handling
@@ -279,8 +290,8 @@
 <body class="claro">
   <div data-dojo-type="dijit/layout/BorderContainer" data-dojo-props="design:'headline', gutters:false" style="width:100%;height:100%;margin:0; background-color:rgb(50, 48, 70);">
     <div id="serviceInput">
-      <input id="execute" type="button" class="button" value="Display another map service*">
-      <input type="text" id="layerName" size="120" style="margin-left:5px" value="http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer">
+      <input id="execute" type="button" class="button" value="Display another map service*"></input>
+      <input type="url" id="layerName" size="120" style="margin-left:5px" value="http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer"></input>
       <br/>*Service must be in Web Mercator projection (3857) or Geographic coordinate system (4326)
     </div>
     <div id="map" data-dojo-type="dijit/layout/ContentPane" data-dojo-props="region:'center'">
@@ -300,7 +311,13 @@
         <p>
           This tool is designed to help determine Web Mercator and Geographic extents for constructing new maps.</br>
         </p>
-        <span id="center">
+        <span id="outputCoords">
+        </span>
+        <hr>
+        <span id="inputCoords">
+          <textarea id="inputJSON" cols="40" rows="10" placeholder="Enter JSON" style="margin:5px;"></textarea>
+          <input id="JSONexecute" type="button" class="button" value="Zoom to new JSON extent"></input>
+          <br/>
         </span>
       </div>
     </div>

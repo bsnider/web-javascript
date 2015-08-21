@@ -6,3 +6,10 @@ body {
 .starter-template {
   text-align: center;
 }
+#mapDiv {
+  min-height: 50px;
+  height: 750px;
+}
+.container.main {
+  padding-bottom: 20px;
+}

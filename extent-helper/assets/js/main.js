@@ -27,7 +27,8 @@ require([
     map = BootstrapMap.create("mapDiv", {
       basemap: "osm",
       center: [-71.6072, 43.8185],
-      zoom: 6
+      zoom: 6,
+      scrollWheelZoom: true
     });
 
     // add the scalebar

@@ -150,105 +150,105 @@
 
 
   <!-- Bootstrap-map-js -->
-  <div class="container-fluid">
+  <div class="container-fluid main">
     <div class="row row-map">
       <div class="col-xs-12">
 
-        <div id="sidebar" class="col-xs-3">
-          <!-- <div class="row">
+        <div id="sidebar" class="col-xs-4">
+          <div class="col-xs-12">
+
+            <div class="row">
+              <br>
+              <div class="col-xs-4">
+                <h4>Map parameters</h4>
+                <button class="btn btn-default" id="mapParamsBtn">Copy</button>
+              </div>
+              <div class="col-xs-8">
+                <pre id="mapParamsText"></pre>
+              </div>
+            </div>
+            <hr>
+
+            <!-- <div class="row">
             <div class="col-xs-4">
             </div>
           </div> -->
-          <div class="row">
-            <br>
-            <div class="col-xs-4">
-              <h4>Map parameters</h4>
-              <button class="btn btn-default" id="mapParamsBtn">Copy</button>
+            <div class="row">
+              <div class="col-xs-4">
+                <h4>Web Mercator coordinates</h4>
+                JSON Extent
+                <button id="ExtentWMBtn" class="btn btn-default">Copy</button>
+              </div>
+              <div class="col-xs-8">
+                <pre id="ExtentWMText"></pre>
+              </div>
             </div>
-            <div class="col-xs-8">
-              <pre id="mapParamsText"></pre>
+            <div class="row">
+              <div class="col-xs-4">
+                Center
+                <button id="CenterWMBtn" class="btn btn-default">Copy</button>
+              </div>
+              <div class="col-xs-8">
+                <pre id="CenterWMText"></pre>
+              </div>
             </div>
-          </div>
-          <hr>
+            <div class="row">
+              <div class="col-xs-4">
+                Mouse location
+                <!-- <button id="MouseWMBtn" class="btn btn-default">Copy</button> -->
+              </div>
+              <div class="col-xs-8">
+                <pre id="MouseWMText">(X,Y)</pre>
+              </div>
+            </div>
 
-          <!-- <div class="row">
+            <hr>
+            <!-- <div class="row">
             <div class="col-xs-4">
             </div>
           </div> -->
-          <div class="row">
-            <div class="col-xs-4">
-              <h4>Web Mercator coordinates</h4>
-              JSON Extent
-              <button id="ExtentWMBtn" class="btn btn-default">Copy</button>
-            </div>
-            <div class="col-xs-8">
-              <pre id="ExtentWMText"></pre>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-4">
-              Center
-              <button id="CenterWMBtn" class="btn btn-default">Copy</button>
-            </div>
-            <div class="col-xs-8">
-              <pre id="CenterWMText"></pre>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-4">
-              Mouse location
-              <!-- <button id="MouseWMBtn" class="btn btn-default">Copy</button> -->
-            </div>
-            <div class="col-xs-8">
-              <pre id="MouseWMText">(X,Y)</pre>
-            </div>
-          </div>
+            <div class="row">
+              <div class="col-xs-4">
+                <h4>Geographic coordinates</h4>
 
-          <hr>
-          <!-- <div class="row">
-            <div class="col-xs-4">
+                JSON Extent
+                <button id="ExtentGeogBtn" class="btn btn-default">Copy</button>
+              </div>
+              <div class="col-xs-8">
+                <pre id="ExtentGeogText">sagdaf</pre>
+              </div>
             </div>
-          </div> -->
-          <div class="row">
-            <div class="col-xs-4">
-              <h4>Geographic coordinates</h4>
+            <div class="row">
+              <div class="col-xs-4">
+                Center
+                <button id="CenterGeogBtn" class="btn btn-default">Copy</button>
+              </div>
+              <div class="col-xs-8">
+                <pre id="CenterGeogText"></pre>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-4">
+                Mouse location
+                <!-- <button id="MouseGeogBtn" class="btn btn-default">Copy</button> -->
+              </div>
+              <div class="col-xs-8">
+                <pre id="MouseGeogText">(X,Y)</pre>
+              </div>
+            </div>
 
-              JSON Extent
-              <button id="ExtentGeogBtn" class="btn btn-default">Copy</button>
-            </div>
-            <div class="col-xs-8">
-              <pre id="ExtentGeogText">sagdaf</pre>
-            </div>
           </div>
-          <div class="row">
-            <div class="col-xs-4">
-              Center
-              <button id="CenterGeogBtn" class="btn btn-default">Copy</button>
-            </div>
-            <div class="col-xs-8">
-              <pre id="CenterGeogText"></pre>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-xs-4">
-              Mouse location
-              <!-- <button id="MouseGeogBtn" class="btn btn-default">Copy</button> -->
-            </div>
-            <div class="col-xs-8">
-              <pre id="MouseGeogText">(X,Y)</pre>
-            </div>
-          </div>
-
-
-
         </div>
 
-        <div class="col-xs-9 mapCol">
-          <div id="mapDiv" class="map"></div>
+
+
+        <div class="col-xs-8 no-col-padding">
+          <div id="mapDiv"></div>
         </div>
 
       </div>
     </div>
+
   </div>
 
   <script type="text/javascript">

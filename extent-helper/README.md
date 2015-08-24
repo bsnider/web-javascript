@@ -10,6 +10,6 @@ The app is developed with Dojo and jQuery and built on top of the [ArcGIS API fo
 
 * inspired by [@noashx's](http://github.com/noashx) [Extent helper sample](http://noashx.github.io/) and Esri's [Flex Extent Helper](http://help.arcgis.com/en/webapps/flexviewer/extenthelper/flexviewer_extenthelper.html)
 
-* Next steps: Style the app, fix map height, and create the search functionality.
+* Next steps: Continue to style the app and fix map height.
 
 NOTE: Please submit pull requests/issues to update to this sample.  I am always looking for ways to make this sample as useful as possible.

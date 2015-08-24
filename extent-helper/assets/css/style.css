@@ -13,3 +13,31 @@ body {
 .container.main {
   padding-bottom: 20px;
 }
+.noPadding{
+  padding:0px;
+}
+.coords {
+  position: absolute;
+  top: 90%;
+  left: 2%;
+  width: 330px;
+  color: #fff;
+  z-index:2;
+}
+
+#MouseText{
+    border-width: 2px;
+    border-style: solid;
+    border-color: #333;
+}
+
+body{
+  background-color: rgb(213, 213, 213);
+}
+#search {
+   display: block;
+   position: absolute;
+   z-index: 2;
+   top: 2%;
+   left: 8%;
+}

@@ -2,7 +2,7 @@ var map, layerExtent;
 // var mouseCoords = "(X,Y)";
 // var mouseCoordsMerc = "(X,Y)";
 var json;
-var basemapString = "osm";
+var basemapString = "dark-gray";
 
 require([
   "esri/map", "esri/dijit/Scalebar", "application/bootstrapmap", "esri/dijit/BasemapGallery", "esri/arcgis/utils", "dojo/parser",
@@ -25,17 +25,16 @@ require([
     parser.parse();
 
     map = BootstrapMap.create("mapDiv", {
-      basemap: "osm",
-      center: [-71.6072, 43.8185],
-      zoom: 6,
+      basemap: "dark-gray",
+      center:  [-88.163, 41.739],
+      zoom: 12,
       scrollWheelZoom: true
     });
-
     // add the scalebar
-    var scalebar = new Scalebar({
-      map: map,
-      scalebarUnit: "dual"
-    });
+    // var scalebar = new Scalebar({
+    //   map: map,
+    //   scalebarUnit: "dual"
+    // });
 
     // add and start the geocoding widget
     var s = new Search({
@@ -75,13 +74,13 @@ require([
 
     $("#mapParamsBtn").click(selectText);
     $("#ExtentWMBtn").click(selectText);
-    // $("#CenterWMBtn").click(selectText);
-    $("#MouseWMBtn").click(selectText);
+    $("#CenterWMBtn").click(selectText);
+    //$("#MouseWMBtn").click(selectText);
     $("#ExtentGeogBtn").click(selectText);
-    // $("#CenterGeogBtn").click(selectText);
-    $("#MouseGeogBtn").click(selectText);
+    $("#CenterGeogBtn").click(selectText);
+    //$("#MouseGeogBtn").click(selectText);
 
-    $("#JSONZoomBtn").click(zooToExtent);
+    $("#JSONZoomBtn").click(zoomToExtent);
 
     // map.on("extent-change", showAttributes);
     // map.on("load", showAttributes)
@@ -120,8 +119,8 @@ require([
       var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
       var JSONGeog = JSON.stringify(extentGeog, null, 4);
 
-      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator <button id=\"drawMercBtn\" class=\"btn btn-default\">Copy</button></div>" +
-        "<div class=\"col-xs-6\">Geographic Coordinates <button id=\"drawGeogBtn\" class=\"btn btn-default\">Copy</button></div></div>" + "<div class=\"row\"><div class=\"col-xs-6\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog +
+      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div>" +
+        "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div></div>" + "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog +
         "</pre></div></div>";
       map.infoWindow.setTitle("JSON Extent");
       map.infoWindow.setContent(infoWinTable);
@@ -177,6 +176,7 @@ require([
     // SELECT TEXT ////////////////////////////////////////////////////////////////////////
     // reference: https://developers.google.com/web/updates/2015/04/cut-and-copy-commands?hl=en
     function selectText(evt) {
+      window.getSelection().removeAllRanges()
       var btnId = evt.toElement.id;
       var id = btnId.substring(0, btnId.length - 3);
       var textId = "#" + id + "Text";
@@ -208,12 +208,10 @@ require([
       //the map is in web mercator but display coordinates in geographic (lat, long)
       var mp = webMercatorUtils.webMercatorToGeographic(evt.mapPoint);
       //display mouse coordinates
-      var mouseCoordsMerc = "(" + evt.mapPoint.x.toFixed(3) + ", " + evt.mapPoint.y.toFixed(3) + ")";
-      var mouseCoords = "(" + mp.x.toFixed(3) + ", " + mp.y.toFixed(3) + ")";
+      var mouseCoordsMerc = "Web Mercator: (" + evt.mapPoint.x.toFixed(3) + ", " + evt.mapPoint.y.toFixed(3) + ")";
+      var mouseCoords = "Lat/long: (" + mp.x.toFixed(3) + ", " + mp.y.toFixed(3) + ")";
       console.log(mouseCoords);
-      $("#MouseWMText").html(mouseCoordsMerc);
-      $("#MouseGeogText").html(mouseCoords);
-
+      $("#MouseText").html("<b>Mouse Location</b>\n" + mouseCoordsMerc + "\n" + mouseCoords);
     }
 
 
@@ -267,13 +265,13 @@ require([
 
     }
 
-    $("#JSONZoomBtn").click(zooToExtent);
+    $("#JSONZoomBtn").click(zoomToExtent);
 
-    function zooToExtent(){
+    function zoomToExtent() {
       var newJSON = $("#inputJSON");
       //var newJSON = dom.byId("inputJSON");
 
-            console.log(newJSON.value);
+      console.log(newJSON.value);
       var extent = new Extent(JSON.parse(newJSON.val()));
 
 
@@ -288,7 +286,7 @@ require([
     // Update map service
     $("#serviceBtn").click(function() {
       map.removeLayer(layer);
-      var newLayerUrl = $("#serviceInput").html();
+      var newLayerUrl = $("#serviceInput").val();
       console.log($("#serviceInput").html());
 
       //newLayerButton.on("click", function() {

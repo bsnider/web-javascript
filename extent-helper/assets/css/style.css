@@ -2,9 +2,7 @@ body {
   padding-top: 50px;
   height: 100%;
   width: 100%;
-}
-.starter-template {
-  text-align: center;
+  background-color: rgb(213, 213, 213);
 }
 #mapDiv {
   min-height: 50px;
@@ -13,8 +11,8 @@ body {
 .container.main {
   padding-bottom: 20px;
 }
-.noPadding{
-  padding:0px;
+.noPadding {
+  padding: 0px;
 }
 .coords {
   position: absolute;
@@ -22,22 +20,17 @@ body {
   left: 2%;
   width: 330px;
   color: #fff;
-  z-index:2;
+  z-index: 2;
 }
-
-#MouseText{
-    border-width: 2px;
-    border-style: solid;
-    border-color: #333;
-}
-
-body{
-  background-color: rgb(213, 213, 213);
+#MouseText {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #333;
 }
 #search {
-   display: block;
-   position: absolute;
-   z-index: 2;
-   top: 2%;
-   left: 8%;
+  display: block;
+  position: absolute;
+  z-index: 2;
+  top: 2%;
+  left: 8%;
 }

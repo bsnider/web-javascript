@@ -5,8 +5,8 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="Determine the extent for a new map">
+  <meta name="author" content="Bradley Snider">
   <link rel="shortcut icon" href="favicon.png">
 
   <title>Extent Helper</title>
@@ -17,16 +17,10 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <!-- Custom styles for this template -->
   <link href="assets/css/style.css" rel="stylesheet">
-
   <!-- Bootstrap-map-js -->
   <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.14/esri/css/esri.css">
   <link rel="stylesheet" type="text/css" href="src/css/bootstrapmap.css">
 
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-      <script src="../bootstrap_v3/docs-assets/js/html5shiv.js"></script>
-      <script src="../bootstrap_v3/docs-assets/js/respond.min.js"></script>
-    <![endif]-->
 </head>
 
 <body>
@@ -61,13 +55,11 @@
           <li><a href="#extentBtn" id="extentBtn"><i class="fa fa-arrows-alt"></i> Draw extent</a></li>
           <li><a href="#serviceBtn" data-toggle="modal" data-target="#serviceModal"><i class="fa fa-map-o fa-x"></i> Zoom to new service</a></li>
           <li><a href="#inputExtentBtn" data-toggle="modal" data-target="#inputExtentModal"><i class="fa fa-compress"></i> Zoom to JSON extent</a></li>
-          <!-- <li><a href="#searchBtn" data-toggle="modal" data-target="#searchModal"><i class="fa fa-search"></i> Search</a></li> -->
         </ul>
       </div>
       <!--/.nav-collapse -->
     </div>
   </div>
-
 
   <!-- Service Modal -->
   <div class="modal fade" id="serviceModal" role="dialog">
@@ -93,6 +85,8 @@
       <!-- /.modal-content -->
     </div>
   </div>
+  <!-- /Service Modal -->
+
 
   <!-- Search Modal -->
   <div class="modal fade" id="searchModal" style="display: none;" aria-hidden="true">
@@ -120,9 +114,8 @@
       </div>
       <!-- /.modal-content -->
     </div>
-    <!-- /.modal-dialog -->
   </div>
-
+  <!-- /Search Modal -->
 
   <!-- Input Extent Modal -->
   <div class="modal fade" id="inputExtentModal" role="dialog">
@@ -148,7 +141,7 @@
       <!-- /.modal-content -->
     </div>
   </div>
-
+  <!-- /Input Extent Modal -->
 
   <!-- Copy Modal -->
   <div class="modal fade" id="copyModal" role="dialog">
@@ -162,7 +155,7 @@
       <!-- /.modal-content -->
     </div>
   </div>
-
+  <!-- /Copy Modal -->
 
   <!-- Bootstrap-map-js -->
   <div class="container-fluid main">
@@ -182,7 +175,7 @@
                     </div>
                     <div class="col-xs-4">
                       <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                      <button id="mapParamsBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
+                        <button id="mapParamsBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
                       </span>
                     </div>
                   </div>
@@ -192,8 +185,8 @@
                 <pre id="mapParamsText"></pre>
               </div>
             </div>
-            <hr>
 
+            <hr>
 
             <div class="row">
               <div class="col-xs-4">
@@ -205,7 +198,7 @@
                     </div>
                     <div class="col-xs-4">
                       <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                      <button id="ExtentWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
+                        <button id="ExtentWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
                       </span>
                     </div>
                   </div>
@@ -224,7 +217,7 @@
                     </div>
                     <div class="col-xs-4">
                       <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                      <button id="CenterWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
+                        <button id="CenterWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
                       </span>
                     </div>
                   </div>
@@ -234,17 +227,9 @@
                 <pre id="CenterWMText"></pre>
               </div>
             </div>
-            <!-- <div class="row">
-              <div class="col-xs-4">
-                Mouse location
-              </div>
-              <div class="col-xs-8">
-                <pre id="MouseWMText">(X,Y)</pre>
-              </div>
-            </div> -->
-
 
             <hr>
+
             <div class="row">
               <div class="col-xs-4">
                 <h4>Geographic coordinates</h4>
@@ -255,7 +240,7 @@
                     </div>
                     <div class="col-xs-4">
                       <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                      <button id="ExtentGeogBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
+                        <button id="ExtentGeogBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i class="fa fa-clipboard"></i></button>
                       </span>
                     </div>
                   </div>
@@ -284,34 +269,30 @@
                 <pre id="CenterGeogText"></pre>
               </div>
             </div>
-            <!-- <div class="row">
-              <div class="col-xs-4">
-                Mouse location
-              </div>
-              <div class="col-xs-8">
-                <pre id="MouseGeogText"><b>Mouse Location</b><br>Web Mercator center: (X,Y)<br>Lat/long center: (X,Y)</pre>
-              </div>
-            </div> -->
 
           </div>
         </div>
 
         <div class="col-xs-8 no-col-padding noPadding">
-          <div class="coords"><pre id="MouseText"><b>Mouse Location</b><br>Web Mercator: (X,Y)<br>Lat/long: (X,Y)</pre>
+          <div class="coords">
+            <pre id="MouseText"><b>Mouse Location</b>
+              <br>Web Mercator: (X,Y)
+              <br>Lat/long: (X,Y)</pre>
           </div>
           <div id="search"></div>
-          <div id="mapDiv" ></div>
+          <div id="mapDiv"></div>
         </div>
 
       </div>
     </div>
 
   </div>
+  <!-- /Bootstrap-map-js -->
 
   <script type="text/javascript">
     var package_path = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
     var dojoConfig = {
-      //T he location.pathname.replace() logic below may look confusing but all its doing is
+      //The location.pathname.replace() logic below may look confusing but all its doing is
       // enabling us to load the api from a CDN and load local modules from the correct location.
       packages: [{
         name: "application",
@@ -319,52 +300,17 @@
       }]
     };
   </script>
+
+  <!-- ArcGIS JavaScript API -->
   <script src="//js.arcgis.com/3.14compact"></script>
 
-
-  <!-- Bootstrap core JavaScript
-    ================================================== -->
-  <!-- Placed at the end of the document so the pages load faster -->
+  <!-- Bootstrap core JavaScript -->
   <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 
+  <!-- Main JavaScript file -->
   <script type="text/javascript" src="assets/js/main.js"></script>
 
-  <script type="text/javascript">
-    // Replace the normal jQuery getScript function with one that supports
-    // debugging and which references the script files as external resources
-    // rather than inline.
-    jQuery.extend({
-      getScript: function(url, callback) {
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.src = url;
-
-        // Handle Script loading
-        {
-          var done = false;
-
-          // Attach handlers for all browsers
-          script.onload = script.onreadystatechange = function() {
-            if (!done && (!this.readyState ||
-                this.readyState == "loaded" || this.readyState == "complete")) {
-              done = true;
-              if (callback)
-                callback();
-
-              // Handle memory leak in IE
-              script.onload = script.onreadystatechange = null;
-            }
-          };
-        }
-
-        head.appendChild(script);
-
-        // We handle everything using the script element injection
-        return undefined;
-      },
-    });
-  </script>
 </body>
 
 </html>

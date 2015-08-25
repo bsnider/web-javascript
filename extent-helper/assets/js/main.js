@@ -1,6 +1,4 @@
 var map, layerExtent;
-// var mouseCoords = "(X,Y)";
-// var mouseCoordsMerc = "(X,Y)";
 var json;
 var basemapString = "dark-gray";
 
@@ -21,12 +19,14 @@ require([
   dom, on, number, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, DrawToolbar, Extent
 ) {
   $(document).ready(function() {
+
     // ADD BASICS - map, layers, scalebar, draw, and search widgets //////////////////
+
     parser.parse();
 
     map = BootstrapMap.create("mapDiv", {
       basemap: "dark-gray",
-      center:  [-88.163, 41.739],
+      center: [-88.163, 41.739],
       zoom: 12,
       scrollWheelZoom: true
     });
@@ -60,39 +60,27 @@ require([
 
     // add a graphics layer for the extent box
     var GLayer = new GraphicsLayer();
-    // BASICS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // BASICS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     // EVENTS ////////////////////////////////////////////////////////////////////////
+
     map.on("load", initDrawToolbar);
     map.on("load", showAttributes);
     map.on("click", drawCenter);
-
     map.on("mouse-move", showMouseCoords);
     map.on("extent-change", showAttributes);
-
 
     $("#mapParamsBtn").click(selectText);
     $("#ExtentWMBtn").click(selectText);
     $("#CenterWMBtn").click(selectText);
-    //$("#MouseWMBtn").click(selectText);
     $("#ExtentGeogBtn").click(selectText);
     $("#CenterGeogBtn").click(selectText);
-    //$("#MouseGeogBtn").click(selectText);
 
     $("#JSONZoomBtn").click(zoomToExtent);
 
-    // map.on("extent-change", showAttributes);
-    // map.on("load", showAttributes)
-    // basemapGallery.on("selection-change", showAttributes);
-
-
-    //map.on("extent-change", drawCenter);
-
     // EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // DRAW EXTENT ///////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // EXTENT ////////////////////////////////////////////////////////////////////////
     function initDrawToolbar() {
       map.infoWindow.resize(600, 700);
       tb = new DrawToolbar(map);
@@ -119,9 +107,7 @@ require([
       var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
       var JSONGeog = JSON.stringify(extentGeog, null, 4);
 
-      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div>" +
-        "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div></div>" + "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog +
-        "</pre></div></div>";
+      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div>" + "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div></div>" + "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog + "</pre></div></div>";
       map.infoWindow.setTitle("JSON Extent");
       map.infoWindow.setContent(infoWinTable);
       var point = new Point();
@@ -134,7 +120,6 @@ require([
       map.infoWindow.show(point);
       $("#drawMercBtn").click(selectText);
       $("#drawGeogBtn").click(selectText);
-
 
       map.infoWindow.on("hide", function() {
         GLayer.clear();
@@ -154,15 +139,15 @@ require([
         1
       ), new Color([111, 0, 255, 0.15])
     );
-    // EXTENT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // CENTER POINT ////////////////////////////////////////////////////////////////////////
+    // DRAW EXTENT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // CENTER POINT ///////////////////////////////////////////////////////////////////////
+
     // create center symbol
     symbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 20,
       new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
-        new Color([255, 0, 0]), 1.5),
-      new Color([0, 255, 0, 0.25]));
+        new Color([226, 230, 62]), 1.5),
+      new Color([215, 25, 25, 0.5]));
 
     // add center graphic
     function drawCenter(evt) {
@@ -170,10 +155,10 @@ require([
       map.graphics.add(new Graphic(evt.mapPoint, symbol));
       map.centerAt(evt.mapPoint);
     }
-    // CENTER POINT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // SELECT TEXT ////////////////////////////////////////////////////////////////////////
+    // CENTER POINT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // COPY TEXT //////////////////////////////////////////////////////////////////////////
+
     // reference: https://developers.google.com/web/updates/2015/04/cut-and-copy-commands?hl=en
     function selectText(evt) {
       window.getSelection().removeAllRanges()
@@ -200,9 +185,9 @@ require([
       window.getSelection().removeAllRanges();
     }
 
-    // SELECT TEXT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // COPY TEXT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // SHOW MOUSE COORDS //////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
     function showMouseCoords(evt) {
       console.log("mouse");
       //the map is in web mercator but display coordinates in geographic (lat, long)
@@ -214,6 +199,8 @@ require([
       $("#MouseText").html("<b>Mouse Location</b>\n" + mouseCoordsMerc + "\n" + mouseCoords);
     }
 
+    // SHOW MOUSE COORDS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // UPDATE SIDEBAR /////////////////////////////////////////////////////////////////////
 
     function showAttributes() {
       map.graphics.clear();
@@ -262,26 +249,21 @@ require([
 
       $("#ExtentGeogText").html(JSONGeog);
       $("#CenterGeogText").html(centerGeog);
-
     }
 
+    // UPDATE SIDEBAR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // NEW SERVICE/JSON EXTENT/BASEMAP ////////////////////////////////////////////////////
+
+    // Zoom to new extent
     $("#JSONZoomBtn").click(zoomToExtent);
 
     function zoomToExtent() {
       var newJSON = $("#inputJSON");
-      //var newJSON = dom.byId("inputJSON");
-
       console.log(newJSON.value);
       var extent = new Extent(JSON.parse(newJSON.val()));
-
-
       console.log(map.extent);
       map.setExtent(extent);
-
-
-
     }
-
 
     // Update map service
     $("#serviceBtn").click(function() {
@@ -298,7 +280,6 @@ require([
         map.setExtent(layer.initialExtent);
       });
     });
-
 
     $("#serviceModalBtn").click(function() {
       // show Modal
@@ -346,8 +327,12 @@ require([
       }
       showAttributes();
     });
+
+    // UPDATE SIDEBAR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    // NEW SERVICE/JSON EXTENT/BASEMAP ////////////////////////////////////////////////////
+
   });
+
   // READY \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 });

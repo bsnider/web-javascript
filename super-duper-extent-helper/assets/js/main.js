@@ -77,6 +77,7 @@ require([
     $("#CenterGeogBtn").click(selectText);
 
     $("#JSONZoomBtn").click(zoomToExtent);
+    $("#pointZoomBtn").click(zoomToPoint);
 
     // EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     // DRAW EXTENT ///////////////////////////////////////////////////////////////////
@@ -189,13 +190,11 @@ require([
     // SHOW MOUSE COORDS //////////////////////////////////////////////////////////////////
 
     function showMouseCoords(evt) {
-      console.log("mouse");
       //the map is in web mercator but display coordinates in geographic (lat, long)
       var mp = webMercatorUtils.webMercatorToGeographic(evt.mapPoint);
       //display mouse coordinates
       var mouseCoordsMerc = "Web Mercator: (" + evt.mapPoint.x.toFixed(3) + ", " + evt.mapPoint.y.toFixed(3) + ")";
       var mouseCoords = "Lat/long: (" + mp.x.toFixed(3) + ", " + mp.y.toFixed(3) + ")";
-      console.log(mouseCoords);
       $("#MouseText").html("<b>Mouse Location</b>\n" + mouseCoordsMerc + "\n" + mouseCoords);
     }
 
@@ -252,17 +251,46 @@ require([
     }
 
     // UPDATE SIDEBAR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    // NEW SERVICE/JSON EXTENT/BASEMAP ////////////////////////////////////////////////////
+    // NEW SERVICE/JSON EXTENT/POINT/BASEMAP ////////////////////////////////////////////////////
 
     // Zoom to new extent
-    $("#JSONZoomBtn").click(zoomToExtent);
-
     function zoomToExtent() {
+      var currentExtent = map.extent;
       var newJSON = $("#inputJSON");
-      console.log(newJSON.value);
+        try {
       var extent = new Extent(JSON.parse(newJSON.val()));
-      console.log(map.extent);
-      map.setExtent(extent);
+      console.log(extent);
+
+        map.setExtent(extent);
+        console.log("null");
+
+      } catch (err) {
+        map.setExtent(currentExtent);
+      }
+    }
+
+    // Zoom to point
+    function zoomToPoint() {
+      var currentExtent = map.extent;
+      var checkedValue = parseFloat($("input:checked").val());
+      var newPointX = parseFloat($("#inputXPoint").val());
+      var newPointY = parseFloat($("#inputYPoint").val());
+      var newZoomLevel = parseFloat($("#inputZoomPoint").val());
+      var newPoint = new Point({
+        "x": newPointX,
+        "y": newPointY,
+        "spatialReference": {
+          "wkid": checkedValue
+        }
+      });
+      if (checkedValue == 4326) {
+        newPoint = webMercatorUtils.geographicToWebMercator(newPoint);
+      }
+      map.centerAndZoom(newPoint, newZoomLevel);
+      if (map.extent.xmin == null) {
+        map.setExtent(currentExtent);
+      }
+
     }
 
     // Update map service
@@ -329,7 +357,7 @@ require([
     });
 
     // UPDATE SIDEBAR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    // NEW SERVICE/JSON EXTENT/BASEMAP ////////////////////////////////////////////////////
+    // NEW SERVICE/JSON EXTENT/POINT/BASEMAP ////////////////////////////////////////////////////
 
   });
 

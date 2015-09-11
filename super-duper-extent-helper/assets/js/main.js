@@ -20,6 +20,54 @@ require([
 ) {
   $(document).ready(function() {
 
+
+    var trigger = $('.hamburger'),
+        overlay = $('.overlay'),
+       isClosed = false;
+
+      trigger.click(function () {
+        hamburger_cross();
+      });
+
+      function hamburger_cross() {
+
+        if (isClosed == true) {
+          overlay.hide();
+          trigger.removeClass('is-open');
+          trigger.addClass('is-closed');
+          isClosed = false;
+        } else {
+          overlay.show();
+          trigger.removeClass('is-closed');
+          trigger.addClass('is-open');
+          isClosed = true;
+        }
+    }
+
+    $('[data-toggle="offcanvas"]').click(function () {
+          $('#wrapper').toggleClass('toggled');
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     // ADD BASICS - map, layers, scalebar, draw, and search widgets //////////////////
 
     parser.parse();
@@ -28,7 +76,8 @@ require([
       basemap: "dark-gray",
       center: [-88.163, 41.739],
       zoom: 12,
-      scrollWheelZoom: true
+      scrollWheelZoom: true,
+      slider:true
     });
     // add the scalebar
     // var scalebar = new Scalebar({
@@ -76,6 +125,12 @@ require([
     $("#ExtentGeogBtn").click(selectText);
     $("#CenterGeogBtn").click(selectText);
 
+    $("#mapParamsIcn").click(selectText);
+    $("#ExtentWMIcn").click(selectText);
+    $("#CenterWMIcn").click(selectText);
+    $("#ExtentGeogIcn").click(selectText);
+    $("#CenterGeogIcn").click(selectText);
+
     $("#JSONZoomBtn").click(zoomToExtent);
     $("#pointZoomBtn").click(zoomToPoint);
 
@@ -108,7 +163,8 @@ require([
       var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
       var JSONGeog = JSON.stringify(extentGeog, null, 4);
 
-      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div>" + "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i class=\"fa fa-clipboard\"></i></button></span></div></div>" + "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog + "</pre></div></div>";
+      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawMercIcn\" class=\"fa fa-clipboard\"></i></button></span></div>" + "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawGeogBtn\" class=\"fa fa-clipboard\"></i></button></span></div></div>" +
+      "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog + "</pre></div></div>";
       map.infoWindow.setTitle("JSON Extent");
       map.infoWindow.setContent(infoWinTable);
       var point = new Point();
@@ -164,14 +220,16 @@ require([
     function selectText(evt) {
       window.getSelection().removeAllRanges()
       var btnId = evt.toElement.id;
+      console.log(btnId);
       var id = btnId.substring(0, btnId.length - 3);
+      console.log(id);
       var textId = "#" + id + "Text";
       console.log(textId);
-      console.log("drawMercText");
       //var copyTextarea = $(textId);
       var copyTextarea = document.querySelector(textId);
       var range = document.createRange();
       range.selectNode(copyTextarea);
+            console.log(range);
       window.getSelection().addRange(range);
       try {
         // Now that we've selected the anchor text, execute the copy command
@@ -257,9 +315,9 @@ require([
     function zoomToExtent() {
       var currentExtent = map.extent;
       var newJSON = $("#inputJSON");
-        try {
-      var extent = new Extent(JSON.parse(newJSON.val()));
-      console.log(extent);
+      try {
+        var extent = new Extent(JSON.parse(newJSON.val()));
+        console.log(extent);
 
         map.setExtent(extent);
         console.log("null");
@@ -290,7 +348,6 @@ require([
       if (map.extent.xmin == null) {
         map.setExtent(currentExtent);
       }
-
     }
 
     // Update map service

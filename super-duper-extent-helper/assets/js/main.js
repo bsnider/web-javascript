@@ -1,12 +1,12 @@
 var map, layerExtent;
 var json;
-var basemapString = "dark-gray";
+var basemapString = "gray";
 
 require([
   "esri/map", "esri/dijit/Scalebar", "application/bootstrapmap", "esri/dijit/BasemapGallery", "esri/arcgis/utils", "dojo/parser",
   "esri/graphic", "esri/geometry/webMercatorUtils", "esri/symbols/SimpleMarkerSymbol",
-  "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/geometry/Point",
-  "esri/dijit/Search", "dojo/_base/Color", "dojo/_base/json",
+  "esri/symbols/SimpleLineSymbol", "esri/symbols/SimpleFillSymbol", "esri/geometry/Point", "esri/SpatialReference",
+  "esri/dijit/Search", "esri/dijit/LocateButton", "dojo/_base/Color", "dojo/_base/json",
   "dojo/dom", "dojo/on", "dojo/number", "esri/layers/ArcGISDynamicMapServiceLayer",
   "esri/layers/FeatureLayer", "esri/layers/GraphicsLayer", "esri/toolbars/draw", "esri/geometry/Extent",
   "dijit/layout/BorderContainer", "dijit/layout/ContentPane", "dijit/TitlePane",
@@ -14,51 +14,39 @@ require([
 ], function(
   Map, Scalebar, BootstrapMap, BasemapGallery, arcgisUtils, parser,
   Graphic, webMercatorUtils, SimpleMarkerSymbol,
-  SimpleLineSymbol, SimpleFillSymbol, Point,
-  Search, Color, Json,
+  SimpleLineSymbol, SimpleFillSymbol, Point, SpatialReference,
+  Search, LocateButton, Color, Json,
   dom, on, number, ArcGISDynamicMapServiceLayer, FeatureLayer, GraphicsLayer, DrawToolbar, Extent
 ) {
   $(document).ready(function() {
 
 
     var trigger = $('.hamburger'),
-        overlay = $('.overlay'),
-       isClosed = false;
+      overlay = $('.overlay'),
+      isClosed = false;
 
-      trigger.click(function () {
-        hamburger_cross();
-      });
-
-      function hamburger_cross() {
-
-        if (isClosed == true) {
-          overlay.hide();
-          trigger.removeClass('is-open');
-          trigger.addClass('is-closed');
-          isClosed = false;
-        } else {
-          overlay.show();
-          trigger.removeClass('is-closed');
-          trigger.addClass('is-open');
-          isClosed = true;
-        }
-    }
-
-    $('[data-toggle="offcanvas"]').click(function () {
-          $('#wrapper').toggleClass('toggled');
+    trigger.click(function() {
+      hamburger_cross();
     });
 
+    function hamburger_cross() {
 
+      if (isClosed == true) {
+        overlay.hide();
+        trigger.removeClass('is-open');
+        trigger.addClass('is-closed');
+        isClosed = false;
+      } else {
+        overlay.show();
+        trigger.removeClass('is-closed');
+        trigger.addClass('is-open');
+        isClosed = true;
+      }
+    }
 
-
-
-
-
-
-
-
-
-
+    $('[data-toggle="offcanvas"]').click(function() {
+      $('#wrapper').toggleClass('toggled');
+    });
 
 
 
@@ -73,11 +61,11 @@ require([
     parser.parse();
 
     map = BootstrapMap.create("mapDiv", {
-      basemap: "dark-gray",
+      basemap: "gray",
       center: [-88.163, 41.739],
       zoom: 12,
       scrollWheelZoom: true,
-      slider:true
+      slider: true
     });
     // add the scalebar
     // var scalebar = new Scalebar({
@@ -91,9 +79,19 @@ require([
       enableLabel: false,
       enableInfoWindow: true,
       showInfoWindowOnSelect: false,
-      map: map
+      map: map,
+      enableButtonMode: false
     }, "search");
     s.startup();
+
+    on(s, 'select-result', function(e) {
+      $('#searchModal').modal('toggle');
+    });
+
+    var locateButton = new LocateButton({
+      map: map
+    }, "locate");
+    locateButton.startup();
 
     // add an example map service to automatically zoom to
     var layer = new ArcGISDynamicMapServiceLayer("http://sampleserver6.arcgisonline.com/arcgis/rest/services/WindTurbines/MapServer");
@@ -131,7 +129,8 @@ require([
     $("#ExtentGeogIcn").click(selectText);
     $("#CenterGeogIcn").click(selectText);
 
-    $("#JSONZoomBtn").click(zoomToExtent);
+    $("#JSONZoomBtn").click(zoomToJSONExtent);
+    $("#indivZoomBtn").click(zoomToIndivExtent);
     $("#pointZoomBtn").click(zoomToPoint);
 
     // EVENTS \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -163,8 +162,16 @@ require([
       var extentGeog = webMercatorUtils.webMercatorToGeographic(evt.geometry);
       var JSONGeog = JSON.stringify(extentGeog, null, 4);
 
-      var infoWinTable = "<div class=\"row\"><div class=\"col-xs-6\">Web Mercator<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawMercIcn\" class=\"fa fa-clipboard\"></i></button></span></div>" + "<div class=\"col-xs-6\">Geographic Coordinates <span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawGeogBtn\" class=\"fa fa-clipboard\"></i></button></span></div></div>" +
-      "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog + "</pre></div></div>";
+      var infoWinTable = "<div class=\"container-fluid\"><div class=\"row\"><div class=\"col-md-12\"><div class=\"row\"><div class=\"col-xs-6\">Web Mercator" +
+        "</div>" + "<div class=\"col-xs-6\">Geographic Coordinates</div>" +
+        "</div></div>" + "<div class=\"row\"><div class=\"col-xs-6 drawPreWrap\"><pre id=\"drawMercText\">" + JSONWebMerc + "</pre></div>" + "<div class=\"col-xs-6\"><pre id=\"drawGeogText\">" + JSONGeog + "</pre></div></div>" +
+
+        "<div class=\"row\"><div class=\"col-xs-6\">" +
+
+        "<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawMercBtn\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawMercIcn\" class=\"fa fa-clipboard\"></i> Copy to clipboard</button></span>" +
+        "</div>" +
+        "<div class=\"col-xs-6\">" +
+        "<span data-toggle=\"tooltip\" data-placement=\"top\" title=\"Copy to clipboard\"><button id=\"drawGeogBtn\" class=\"btn btn-success\" data-toggle=\"modal\" data-target=\"#copyModal\"><i id=\"drawGeogBtn\" class=\"fa fa-clipboard\"></i> Copy to clipboard</button></span></div></div></div></div></div>";
       map.infoWindow.setTitle("JSON Extent");
       map.infoWindow.setContent(infoWinTable);
       var point = new Point();
@@ -229,7 +236,7 @@ require([
       var copyTextarea = document.querySelector(textId);
       var range = document.createRange();
       range.selectNode(copyTextarea);
-            console.log(range);
+      console.log(range);
       window.getSelection().addRange(range);
       try {
         // Now that we've selected the anchor text, execute the copy command
@@ -242,7 +249,12 @@ require([
       // Remove the selections - NOTE: Should use
       // removeRange(range) when it is supported
       window.getSelection().removeAllRanges();
+      setTimeout(function() {
+        $(copyModal).modal('toggle');
+      }, 1000);
     }
+
+
 
     // COPY TEXT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     // SHOW MOUSE COORDS //////////////////////////////////////////////////////////////////
@@ -311,8 +323,8 @@ require([
     // UPDATE SIDEBAR \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     // NEW SERVICE/JSON EXTENT/POINT/BASEMAP ////////////////////////////////////////////////////
 
-    // Zoom to new extent
-    function zoomToExtent() {
+    // Zoom to new JSON extent
+    function zoomToJSONExtent() {
       var currentExtent = map.extent;
       var newJSON = $("#inputJSON");
       try {
@@ -327,10 +339,38 @@ require([
       }
     }
 
+
+    // Zoom to new indiv extent
+    function zoomToIndivExtent() {
+      var currentExtent = map.extent;
+      var newJSON = $("#inputJSON");
+
+
+
+      var checkedValue = parseFloat($("input:checked").filter(".extentCheck").val());
+      var newXMin = parseFloat($("#indivXMin").val());
+      var newXMax = parseFloat($("#indivXMax").val());
+      var newYMin = parseFloat($("#indivYMin").val());
+      var newYMax = parseFloat($("#indivYMax").val());
+      var extent = new Extent(newXMin, newYMin, newXMax, newYMax, new SpatialReference({
+        wkid: checkedValue
+      }));
+
+      console.log(extent);
+
+      map.setExtent(extent);
+      try {
+        console.log("null");
+
+      } catch (err) {
+        map.setExtent(currentExtent);
+      }
+    }
+
     // Zoom to point
     function zoomToPoint() {
       var currentExtent = map.extent;
-      var checkedValue = parseFloat($("input:checked").val());
+      var checkedValue = parseFloat($("input:checked").filter(".pointCheck").val());
       var newPointX = parseFloat($("#inputXPoint").val());
       var newPointY = parseFloat($("#inputYPoint").val());
       var newZoomLevel = parseFloat($("#inputZoomPoint").val());
@@ -341,9 +381,12 @@ require([
           "wkid": checkedValue
         }
       });
+      console.log(newPoint);
       if (checkedValue == 4326) {
         newPoint = webMercatorUtils.geographicToWebMercator(newPoint);
       }
+      console.log(newPoint);
+
       map.centerAndZoom(newPoint, newZoomLevel);
       if (map.extent.xmin == null) {
         map.setExtent(currentExtent);
@@ -365,6 +408,8 @@ require([
         map.setExtent(layer.initialExtent);
       });
     });
+
+
 
     $("#serviceModalBtn").click(function() {
       // show Modal

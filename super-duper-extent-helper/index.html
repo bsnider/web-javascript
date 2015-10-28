@@ -15,11 +15,12 @@
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
   <!-- Font Awesome CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-  <!-- Custom styles for this template -->
-  <link rel="stylesheet" href="assets/css/style.css">
+
   <!-- Bootstrap-map-js -->
   <link rel="stylesheet" type="text/css" href="//js.arcgis.com/3.14/esri/css/esri.css">
   <link rel="stylesheet" type="text/css" href="src/css/bootstrapmap.css">
+  <!-- Custom styles for this template -->
+  <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
 
@@ -35,21 +36,25 @@
         <a class="navbar-brand" id="navbarBrandCustom" href="index.html"><i class="fa fa-globe"></i> Super-Duper Extent Helper</a>
       </div>
       <div class="collapse navbar-collapse">
-        <ul class="nav navbar-nav navbar-right">
+        <ul class="nav navbar-nav navbar-right header-nav">
+          <li></li>
           <li><a href="#extentBtn" id="extentBtn"><i class="fa fa-arrows-alt"></i> Draw extent</a></li>
+          <li><a href="#searchBtn" data-toggle="modal" data-target="#searchModal"><i class="fa fa-search"></i> Search</a></li>
           <li class="dropdown" id="zoomToList">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-clone"></i> Zoom to <b class="caret"></b></a>
-            <ul class="dropdown-menu" id="myDropdownZoom">
+            <ul class="dropdown-menu header-nav-dropdown" id="myDropdownZoom">
+              <li></li>
               <li><a href="#serviceBtn" data-toggle="modal" data-target="#serviceModal"><i class="fa fa-map-o fa-x"></i> New service</a></li>
-              <li><a href="#inputExtentBtn" data-toggle="modal" data-target="#inputExtentModal"><i class="fa fa-compress"></i> JSON extent</a></li>
+              <li><a href="#inputExtentBtn" data-toggle="modal" data-target="#inputExtentModal"><i class="fa fa-compress"></i> Extent</a></li>
               <li><a href="#inputPointBtn" data-toggle="modal" data-target="#inputPointModal"><i class="fa fa-map-marker"></i> Point</a></li>
             </ul>
           </li>
 
           <li class="dropdown" id="basemapList">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-clone"></i> Basemaps <b class="caret"></b></a>
-            <ul class="dropdown-menu" id="myDropdownBasemaps">
-              <li><a href="#">Dark Gray</a></li>
+            <ul class="dropdown-menu header-nav-dropdown" id="myDropdownBasemaps">
+              <li></li>
+              <li><a href="#">Gray</a></li>
               <li class="divider"></li>
               <li><a href="#">Streets</a></li>
               <li><a href="#">Open Street Map</a></li>
@@ -57,7 +62,7 @@
               <li><a href="#">Imagery with Labels</a></li>
               <li><a href="#">National Geographic</a></li>
               <li><a href="#">Topographic</a></li>
-              <li><a href="#">Gray</a></li>
+              <li><a href="#">Dark Gray</a></li>
             </ul>
           </li>
 
@@ -81,13 +86,14 @@
         <div class="modal-body">
           <p>The service must be in Web Mercator projection (3857) or Geographic coordinate system (4326).</p>
           <div class="row">
-            <div class="col-xs-4">
-              <button id="serviceBtn" data-dismiss="modal" class="btn btn-default">Go</button>
-            </div>
             <div class="col-xs-8">
-              <textarea id="serviceInput" cols="40" rows="10" style="margin:5px;">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer</textarea>
+              <!-- <textarea id="serviceInput" cols="40" rows ="10" style="margin:5px;" onclick="this.select()">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer</textarea> -->
+              <textarea id="serviceInput" cols="40" rows ="10" style="margin:5px;">http://sampleserver6.arcgisonline.com/arcgis/rest/services/DamageAssessmentStatePlane/MapServer</textarea>
             </div>
           </div>
+        </div>
+        <div class="modal-footer">
+          <button id="serviceBtn" data-dismiss="modal" class="btn btn-success  pull-right">Go</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -97,27 +103,39 @@
 
 
   <!-- Search Modal -->
-  <div class="modal fade" id="searchModal" style="display: none;" aria-hidden="true">
+  <div class="modal fade" id="searchModal" role="dialog">
     <!-- Modal content-->
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md">
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
           <h4 class="modal-title">Search</h4>
         </div>
         <div class="modal-body">
-          <div class="form-group">
-            <div id="geosearch"></div>
-          </div>
-          <form id="geosearch-form" class="form-inline">
-            <div class="checkbox">
-              <label>
-                <input id="chkExtent" type="checkbox"> Search in map extent only
-              </label>
+           <div class="container">
+            <div class="row">
+              <div class="col-md-1"> </div>
+              <div class="col-md-8">
+                <div id="search"></div>
+              </div>
             </div>
-            <button id="btnGeosearch" type="button" class="btn btn-success btn-fixed" data-dismiss="modal"> Go </button>
-            <button id="btnDismiss" type="submit" class="btn btn-default btn-fixed" data-dismiss="modal">Dismiss</button>
-          </form>
+          </div>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -127,27 +145,142 @@
 
   <!-- Input Extent Modal -->
   <div class="modal fade" id="inputExtentModal" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Zoom to a JSON extent</h4>
+          <h4 class="modal-title">Zoom to an extent</h4>
         </div>
         <div class="modal-body">
-          <p>Enter a JSON extent and zoom to it.</p>
-          <div class="row">
-            <div class="col-xs-4">
-              <button id="JSONZoomBtn" data-dismiss="modal" class="btn btn-default">Go</button>
+
+
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#individTab" data-toggle="tab">Individual parameters</a></li>
+            <li><a href="#jsonTab" data-toggle="tab">JSON formatted</a></li>
+          </ul>
+          <div class="tab-content">
+
+            <div id="individTab" class="tab-pane fade in active">
+              <div class="row">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <form role="form" id="radio">
+                        <div class="form-group">
+                          <h4>Spatial reference</h4>
+                          <div class="row">
+                            <div class="col-md-3">
+                              <input id="indivSpatRefWM" name="indivSpatRef" value="102100" type="radio" class="extentCheck" />
+                              <label for="indivSpatRefWM">
+                                Web Mercator
+                              </label>
+                            </div>
+
+                            <div class="col-md-3">
+                              <input id="indivSpatRefGeo" name="indivSpatRef" value="4326" type="radio" class="extentCheck"  checked = "checked" />
+                              <label for="indivSpatRefGeo">
+                                Lat Long
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                      <form role="form">
+
+                        <!-- <div class="row">
+                          <div class="col-md-6">
+                          <h4>Spatial reference</h4>
+                        </div>
+                      </div> -->
+                        <div class="form-group">
+                          <h4>Coordinates</h4>
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label for="indivXMin">
+                                X min
+                              </label>
+                              <!-- <input type="text" class="form-control" id="indivXMin" onclick="this.select()" value="-117.06" /> -->
+                              <input type="text" class="form-control" id="indivXMin" value="-117.06" />
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="indivYMin">
+                                Y min
+                              </label>
+                              <!-- <input type="text" class="form-control" id="indivYMin" onclick="this.select()" value="33.57" /> -->
+                              <input type="text" class="form-control" id="indivYMin" value="33.57" />
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div class="form-group">
+                          <div class="row">
+                            <div class="col-md-6">
+                              <label for="indivXMax">
+                                X max
+                              </label>
+                              <!-- <input type="text" class="form-control" id="indivXMax" onclick="this.select()" value="-116.31" /> -->
+                              <input type="text" class="form-control" id="indivXMax" value="-116.31" />
+                            </div>
+
+                            <div class="col-md-6">
+                              <label for="indivYMax">
+                                Y max
+                              </label>
+                              <!-- <input type="text" class="form-control" id="indivYMax" onclick="this.select()" value="34.14" /> -->
+                              <input type="text" class="form-control" id="indivYMax" value="34.14" />
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </form>
+
+                      <hr>
+                      <button id="indivZoomBtn" data-dismiss="modal" class="btn btn-success pull-right">Go</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="col-xs-8">
-              <textarea id="inputJSON" cols="40" rows="10" style="margin:5px;" placeholder="Enter JSON"></textarea>
+
+            <div id="jsonTab" class="tab-pane fade in">
+              <br>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="text-center">
+                  <!-- <textarea id="inputJSON" cols="40" rows="10" style="margin:5px;" placeholder="Enter JSON" onfocus="this.select()"  onmouseup="return false;"> -->
+                  <textarea id="inputJSON" cols="40" rows="10" style="margin:5px;" placeholder="Enter JSON">
+{
+    "type": "extent",
+    "xmin": -117.06263228876504,
+    "ymin": 33.578386616346705,
+    "xmax": -116.31144210321919,
+    "ymax": 34.14855041774642,
+    "spatialReference": {
+        "wkid": 4326
+    }
+}</textarea>
+</div>
+                  <hr>
+                  <button id="JSONZoomBtn" data-dismiss="modal" class="btn btn-success pull-right">Go</button>
+
+                </div>
+              </div>
             </div>
+
           </div>
         </div>
+
+
+
       </div>
-      <!-- /.modal-content -->
     </div>
+    <!-- /.modal-content -->
+  </div>
   </div>
   <!-- /Input Extent Modal -->
 
@@ -161,49 +294,72 @@
           <h4 class="modal-title">Zoom to a point</h4>
         </div>
         <div class="modal-body">
-          <div class="row">
 
-            <div class="col-md-4">
-              <form role="form" id="radio">
-                <div class="form-group">
-                  <input id="spatRefWM" name="spatRefWM" value="102100" type="radio" />
-                  <label for="spatRefWM">
-                    Web Mercator
-                  </label>
-                </div>
-                <div class="form-group">
-                  <input id="spatRefGeo" name="spatRefWM" value="4326" type="radio" />
-                  <label for="spatRefGeo">
-                    Lat Long
-                  </label>
-                </div>
-              </form>
-            </div>
+            <div class="container-fluid">
+              <div class="row">
+                <div class="col-md-12">
 
-            <div class="col-md-8">
-              <form role="form">
+                  <form role="form" id="radio">
+                    <div class="form-group">
+                      <h4>Spatial reference</h4>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <input id="spatRefWMPt" name="spatRefPt" value="102100" type="radio" class="pointCheck" />
 
-                <div class="form-group">
-                  <label for="inputXPoint">
-                    Coordinates
-                  </label>
-                  <input id="inputXPoint" type="text" style="margin:5px;" placeholder="X" size="12" autofocus/>
-                  <input id="inputYPoint" type="text" style="margin:5px;" placeholder="Y" size="12" />
-                </div>
+                          <label for="spatRefWMPt">
+                            Web Mercator
+                          </label>
+                        </div>
 
-                <div class="form-group">
-                  <label for="inputZoomPoint">
-                    Zoom level
-                  </label>
-                  <input id="inputZoomPoint" type="number" style="margin:5px;" placeholder="Enter zoom level" min=0 max=16 value="12" />
+                        <div class="col-md-3">
+                          <input id="spatRefGeoPt" name="spatRefPt" value="4326" type="radio" class="pointCheck" checked="checked" />
+                          <label for="spatRefGeoPt">
+                            Lat Long
+                          </label>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
+                  <form role="form">
+                    <div class="form-group">
+                      <h4>Coordinates</h4>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label for="inputXPoint"> X</label>
+                          <!-- <input id="inputXPoint" type="text" style="margin:5px;" onclick="this.select()" value="34.14" /> -->
+                          <input id="inputXPoint" type="text" style="margin:5px;" value="-116.31" />
+                        </div>
+                        <label for="inputXPoint"> Y</label>
+                        <!-- <input id="inputYPoint" type="text" style="margin:5px;" onclick="this.select()" value="-116.31" /> -->
+                        <input id="inputYPoint" type="text" style="margin:5px;" value="34.14" />
+                      </div>
+                    </div>
+                  </form>
+
+                  <form role="form">
+                    <div class="form-group">
+                      <h4>Zoom</h4>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="inputZoomPoint">
+                              level</label>
+                            <!-- <input id="inputZoomPoint" type="number" style="margin:5px;" placeholder="Enter zoom level" min=0 max=16 value="12" onclick="this.select()" /> -->
+                            <input id="inputZoomPoint" type="number" style="margin:5px;" placeholder="Enter zoom level" min=0 max=16 value="12" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+
                 </div>
-              </form>
+              </div>
             </div>
 
           </div>
-        </div>
         <div class="modal-footer">
-          <button id="pointZoomBtn" data-dismiss="modal" class="btn btn-default">Go</button>
+          <button id="pointZoomBtn" data-dismiss="modal" class="btn btn-success">Go</button>
         </div>
       </div>
       <!-- /.modal-content -->
@@ -242,7 +398,7 @@
               <pre id="mapParamsText"></pre>
               <br>
               <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                <button id="mapParamsBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i id="mapParamsIcn" class="fa fa-clipboard"></i></button>
+                <button id="mapParamsBtn" class="btn btn-success" data-toggle="modal" data-target="#copyModal"><i id="mapParamsIcn" class="fa fa-clipboard"></i> Copy to clipboard</button>
               </span>
             </li>
           </ul>
@@ -259,7 +415,7 @@
               <pre id="ExtentWMText"></pre>
               <br>
               <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                <button id="ExtentWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i id="ExtentWMIcn" class="fa fa-clipboard"></i></button>
+                <button id="ExtentWMBtn" class="btn btn-success" data-toggle="modal" data-target="#copyModal"><i id="ExtentWMIcn" class="fa fa-clipboard"></i> Copy to clipboard</button>
               </span>
 
               <br>
@@ -269,7 +425,7 @@
               <pre id="CenterWMText"></pre>
               <br>
               <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                <button id="CenterWMBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i id="CenterWMIcn" class="fa fa-clipboard"></i></button>
+                <button id="CenterWMBtn" class="btn btn-success" data-toggle="modal" data-target="#copyModal"><i id="CenterWMIcn" class="fa fa-clipboard"></i> Copy to clipboard</button>
               </span>
 
             </li>
@@ -287,7 +443,7 @@
               <pre id="ExtentGeogText"></pre>
               <br>
               <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard">
-                <button id="ExtentGeogBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i id="ExtentGeogIcn" class="fa fa-clipboard"></i></button>
+                <button id="ExtentGeogBtn" class="btn btn-success" data-toggle="modal" data-target="#copyModal"><i id="ExtentGeogIcn" class="fa fa-clipboard"></i> Copy to clipboard</button>
               </span>
 
               <br>
@@ -298,7 +454,7 @@
               <pre id="CenterGeogText"></pre>
               <br>
               <span data-toggle="tooltip" data-placement="top" title="Copy to clipboard"></span>
-              <button id="CenterGeogBtn" class="btn btn-default" data-toggle="modal" data-target="#copyModal"><i id="CenterGeogIcn" class="fa fa-clipboard"></i></button>
+              <button id="CenterGeogBtn" class="btn btn-success" data-toggle="modal" data-target="#copyModal"><i id="CenterGeogIcn" class="fa fa-clipboard"></i> Copy to clipboard</button>
               </span>
 
             </li>
@@ -328,7 +484,7 @@
         <br>Web Mercator: (X,Y)
         <br>Lat/long: (X,Y)</pre>
     </div>
-    <div id="search"></div>
+    <div id="locate"></div>
     <div id="mapDiv"></div>
   </div>
   <!-- /#wrapper -->

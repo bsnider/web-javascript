@@ -1,6 +1,6 @@
 #ArcGIS API for JavaScript Extent Helper
 
-* [Live Sample](http://bsnider.github.io/web-javascript/extent-helper/index.html)
+* [Live Sample](http://bsnider.github.io/web-javascript/super-duper-extent-helper/index.html)
 
 This tool is designed to help determine Web Mercator and Geographic extents for constructing new maps.
 
